@@ -20,11 +20,11 @@ function beginTransaction() {
 }
 
 function printItem(item) {
-	let str = ``;
-	Object.getOwnPropertyNames(item).forEach(function(value) {
-		str += `${value}: ${item[value]} | `;
-	}, this);
-	console.log(str);
+	// let str = ``;
+	// Object.getOwnPropertyNames(obj).forEach(function(value) {
+	// 	str += `${value}: ${obj[value]} | `;
+	// }, this);
+	console.log(`ID: ${item.item_id}; ${item.product_name}; ${item.department_name}; \$${item.price}; Quantity: ${item.stock_quantity}`);
 }
 
 function getInput(numChoices) {
@@ -60,10 +60,12 @@ function purchaseItem(productId, quantity) {
 		if (result[0].stock_quantity >= quantity) {
 			console.log(`Great, we have enough ${result[0].product_name} in stock to fulfill your order.`);
 			let stockLevel = result[0].stock_quantity - quantity;
-			//tired of call backs, trying a promise
+			//trying a promise - Sunday at noon
+			//Update for Sunday evening in the middle of second whiskey, i realized that if i don't use the returned value
+			//that there really was no reason to use a promise. i'm just using the promise to make my code appear synchronous;
+			//the work is being done by a side effect. le sigh.
 			updateStock(productId, stockLevel)
 				.then(function() {
-					// console.log("Successfully updated stock");
 					console.log(`The total price for ${quantity} ${result[0].product_name} is \$${result[0].price * quantity}.`);
 					connection.end();
 				})
@@ -84,7 +86,6 @@ function updateStock(productId, stockLevel) {
 	return new Promise(function(resolve, reject) {
 		connection.query(`UPDATE products SET stock_quantity = ${stockLevel} WHERE item_id = ${productId}`, function(err, result) {
 			if (err) {
-				// console.log(err);
 				reject(err);
 			}
 			resolve(result);
