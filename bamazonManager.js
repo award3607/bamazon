@@ -20,7 +20,7 @@ function getInput() {
 			choices: [
 				'View products for sale',
 				'View low inventory',
-				'Add to inventory',
+				'Update product inventory',
 				'Add new product'
 			]
 		}
@@ -175,7 +175,6 @@ function addProduct() {
 			}
 		}
 	]).then(function(answer) {
-		console.log(answer);
 		let query = `INSERT INTO products SET product_name = "${answer.name}", department_name = "${answer.department}", price = ${answer.price}, stock_quantity = ${answer.quantity}`;
 		dbQuery(query).then(function() {
 			console.log('New product added');
